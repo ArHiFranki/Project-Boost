@@ -13,6 +13,10 @@ public class CollisionHandler : MonoBehaviour
     [SerializeField] private AudioClip successSFX;
     [SerializeField] [Range(0, 1)] private float successSFXVolume = 0.5f;
 
+    [Header("Particles Effects")]
+    [SerializeField] private ParticleSystem crashParticles;
+    [SerializeField] private ParticleSystem successParticles;
+
     private AudioSource myAudioSource;
 
     private bool isTransitioning = false;
@@ -64,6 +68,7 @@ public class CollisionHandler : MonoBehaviour
         isTransitioning = true;
         myAudioSource.Stop();
         myAudioSource.PlayOneShot(crashSFX, crashSFXVolume);
+        crashParticles.Play();
         GetComponent<Movement>().enabled = false;
         Invoke("ReloadLevel", levelLoadDelay);
     }
@@ -73,6 +78,7 @@ public class CollisionHandler : MonoBehaviour
         isTransitioning = true;
         myAudioSource.Stop();
         myAudioSource.PlayOneShot(successSFX, successSFXVolume);
+        successParticles.Play();
         GetComponent<Movement>().enabled = false;
         Invoke("LoadNextLevel", levelLoadDelay);
     }
