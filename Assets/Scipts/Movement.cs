@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(AudioSource))]
 public class Movement : MonoBehaviour
 {
     [SerializeField] private float mainThrust = 1000f;
     [SerializeField] private float rotationThrust = 100f;
 
     private Rigidbody myRigidbody;
+    private AudioSource myAudioSource;
 
     private void Awake()
     {
         myRigidbody = GetComponent<Rigidbody>();
+        myAudioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -26,6 +29,15 @@ public class Movement : MonoBehaviour
         if (Input.GetKey(KeyCode.Space))
         {
             myRigidbody.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
+
+            if (!myAudioSource.isPlaying)
+            {
+                myAudioSource.Play();
+            }
+        }
+        else
+        {
+            myAudioSource.Stop();
         }
     }
 
