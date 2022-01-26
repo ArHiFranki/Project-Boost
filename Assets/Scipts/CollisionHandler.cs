@@ -2,9 +2,23 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Movement))]
+[RequireComponent(typeof(AudioSource))]
 public class CollisionHandler : MonoBehaviour
 {
     [SerializeField] private float levelLoadDelay = 1f;
+
+    [Header("Sound Effects")]
+    [SerializeField] private AudioClip crashSFX;
+    [SerializeField] [Range(0, 1)] private float crashSFXVolume = 0.5f;
+    [SerializeField] private AudioClip successSFX;
+    [SerializeField] [Range(0, 1)] private float successSFXVolume = 0.5f;
+
+    private AudioSource myAudioSource;
+
+    private void Awake()
+    {
+        myAudioSource = GetComponent<AudioSource>();
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -43,12 +57,14 @@ public class CollisionHandler : MonoBehaviour
 
     private void StartCrashSequence()
     {
+        myAudioSource.PlayOneShot(crashSFX, crashSFXVolume);
         GetComponent<Movement>().enabled = false;
         Invoke("ReloadLevel", levelLoadDelay);
     }
 
     private void StartSuccessSequence()
     {
+        myAudioSource.PlayOneShot(successSFX, successSFXVolume);
         GetComponent<Movement>().enabled = false;
         Invoke("LoadNextLevel", levelLoadDelay);
     }
